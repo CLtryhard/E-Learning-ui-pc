@@ -35,7 +35,6 @@
 
 <!--编写页面静态部分,即model和vm部分-->
 <script>
-
   //引入cms.js,并将所有的API起名为cmsApi
   import * as cmsApi from '../api/cms';
 
@@ -52,9 +51,8 @@
     },
     methods: {
       //分页查询
-
       changePage: function (page) {
-        this.params.page= page;
+        this.params.page = page;
         this.query();
       },
       //查询
@@ -68,8 +66,8 @@
             this.list = response.queryResult.list;
             this.total = response.queryResult.total;
           });
-      }
-      mounted(){
+      },
+      mounted() {
         //当Dom元素渲染完成后调用query
         this.query();
       }
