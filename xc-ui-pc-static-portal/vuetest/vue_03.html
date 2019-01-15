@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <ul>
+        <!--只显示偶数行-->
+        <li v-for="(item,index) in list" :key="index" v-if="index % 2==0">{{index}}-{{item}}
+        </li>
+        <li v-for ="(value,key) in user">{{key}}-{{value}}</li>
+        <li v-for="(item,index) in userlist" :key="item.user.uname">
+            <div v-if="item.user.uname=='heima'" style="background: chartreuse"><!--名称为heima的
+                加背景色-->
+                {{index}}-{{item.user.uname}}-{{item.user.age}}
+            </div>
+            <div v-else="">
+                {{index}}-{{item.user.uname}}-{{item.user.age}}
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            list:[1,2,3,4,4],
+            user:{uname:'itcast',age:10},
+            userlist:[
+                { user:{uname:'itcast',age:10}},
+                { user:{uname:'heima',age:11}}
+            ]
+        }
+    });
+</script>
+</html>

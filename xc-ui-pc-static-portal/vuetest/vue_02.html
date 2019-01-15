@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>vue.js入门程序</title>
+</head>
+<body>
+<div id="app">
+    <!--{{name}}解决闪烁问题使用v-text-->
+    <a v-bind:href="url"><span v-text="name"></span></a>
+    <input type="text" v-model="num1">+
+    <input type="text" v-model="num2">=
+    <span v-text="result"></span>
+    <!-- <span v-text="Number.parseInt(num1)+Number.parseInt(num2)"></span>-->
+    <!--{{num1+num2}}-->
+    <!--<input type="text" v-model="result">-->
+    <button v-on:click="change">计算</button>
+    <!-- 在Vue接管区域中使用Vue的系统指令呈现数据
+    这些指令就相当于是MVVM中的View这个角色 -->
+    <div v-bind:style="{fontsize: size + 'px'}">JavaScript nice!</div>
+</div>
+</body>
+<script src="vue.min.js"></script>
+<script>
+    // 实例化Vue对象
+    //vm :叫做MVVM中的 View Modelvar
+    VM = new Vue({
+        el:"#app",//表示当前vue对象接管app的div区域
+        data:{
+            name:'黑马程序员',// 相当于是MVVM中的Model这个角色
+            num1:0,
+            num2:0,
+            result:0,
+            size:33,
+            url:'http://www.itcast.cn'
+        },
+        methods:{
+            change:function(){
+                this.result = Number.parseInt(this.num1)+Number.parseInt(this.num2)
+                alert(this.result)
+            }
+        }
+    });
+</script>
+</html>

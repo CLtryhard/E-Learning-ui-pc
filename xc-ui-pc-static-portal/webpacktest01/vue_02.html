@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>vue.js入门程序</title>
+</head>
+<body>
+<div id="app">
+    <!--{{name}}解决闪烁问题使用v-text-->
+    <a v-bind:href="url"><span v-text="name"></span></a>
+    <input type="text" v-model="num1">+
+    <input type="text" v-model="num2">=
+    <span v-text="result"></span>
+    <!--{{num1+num2}}-->
+    <!--<input type="text" v-model="result">-->
+    <button v-on:click="change">计算</button>
+    <!-- 在Vue接管区域中使用Vue的系统指令呈现数据
+    这些指令就相当于是MVVM中的View这个角色 -->
+</div>
+</body>
+<script src="build.js"></script>
+<script>
+</script>
+</html>
