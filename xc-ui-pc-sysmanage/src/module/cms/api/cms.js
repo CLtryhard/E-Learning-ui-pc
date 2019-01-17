@@ -26,4 +26,9 @@ export const page_get = (id) => {
 export const page_update = (id,params) => {
   return http.requestPut(apiUrl+'/cms/page/update/'+id,params)
 };
+//页面删除
+export const page_del = id => {
+  return http.requestDelete(apiUrl+'/cms/page/del/'+id)
+};
+
 
