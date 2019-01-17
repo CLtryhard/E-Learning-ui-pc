@@ -14,6 +14,15 @@
       页面别名：
       <el-input v-model="params.pageAliase" style="width: 100px"></el-input>
       <el-button type="primary" v-on:click="query" size="small">查询</el-button>
+      <!--点击新增页面时,定向到新的路由-->
+      <router-link class="mui-tab-item" :to="{path:'/cms/page/add/',query:{
+        page:this.page,
+        siteId:this.params.siteId
+      }}">
+        <!--新增页面按钮-->
+      <el-button type="primary" size="small">新增页面</el-button>
+      </router-link>
+
     </el-form>
     <el-table
       :data="list"
@@ -34,12 +43,13 @@
       <el-table-column prop="pageCreateTime" label="创建时间" width="180">
       </el-table-column>
     </el-table>
+    <!--分页组件-->
     <el-pagination
       layout="prev, pager, next"
-      :page-size="this.params.size"
+      :page-size="this.size"
       v-on:current-change="changePage"
       :total="total"
-      :current-page="this.params.page"
+      :current-page="this.page"
       style="float:right;">
     </el-pagination>
   </div>
@@ -66,15 +76,10 @@
       }
     },
     methods: {
-      //分页查询
-      changePage: function (page) {
-        this.params.page = page;
-        this.query();
-      },
       //查询
       query: function () {
         //alert("查询");
-        //调用服务端的接口
+        //调用服务端的接口q
         cmsApi.page_list(this.page, this.size, this.params)
         //回调函数用then
           .then((response) => {
@@ -82,7 +87,19 @@
             this.list = response.queryResult.list;
             this.total = response.queryResult.total;
           });
+      },
+      //分页查询
+      changePage: function (page) {
+        alert(page);
+        this.page = page;
+        this.query();
       }
+    },
+    //在新增页面点击返回时,由于我需要在页面渲染完成之前得到参数,所以勇敢created
+    created(){
+      this.page = Number.parseInt(this.$route.query.page || 1);
+      this.params.siteId = this.$route.query.siteId || '';
+      this.query();
     },
     mounted() {
       //默认查询页面
