@@ -18,6 +18,12 @@ export const page_add = params =>{
   //请求服务端的添加页面接口,并将页面数据传出
   return http.requestPost(apiUrl + '/cms/page/add', params);
 };
-
-
+//根据id查询页面
+export const page_get = (id) => {
+  return http.requestQuickGet(apiUrl + '/cms/page/query/' + id);
+};
+//修改页面
+export const page_update = (id,params) => {
+  return http.requestPut(apiUrl+'/cms/page/update/'+id,params)
+};
 

@@ -5,6 +5,6 @@ var sysConfig = {
     videoUrl:'http://video.xuecheng.com/',
     openAuthenticate:true,
     openAuthorize:true
-}
+};
 
-module.exports = sysConfig
+module.exports = sysConfig;

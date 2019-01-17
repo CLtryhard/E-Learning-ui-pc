@@ -20,7 +20,7 @@
         siteId:this.params.siteId
       }}">
         <!--新增页面按钮-->
-      <el-button type="primary" size="small">新增页面</el-button>
+        <el-button type="primary" size="small">新增页面</el-button>
       </router-link>
 
     </el-form>
@@ -42,6 +42,15 @@
       </el-table-column>
       <el-table-column prop="pageCreateTime" label="创建时间" width="180">
       </el-table-column>
+      <el-table-column label="操作" width="80">
+        <template slot-scope="page">
+          <el-button
+            size="small" type="text"
+            @click="update(page.row.pageId)">编辑
+          </el-button>
+        </template>
+      </el-table-column>
+
     </el-table>
     <!--分页组件-->
     <el-pagination
@@ -93,10 +102,19 @@
         alert(page);
         this.page = page;
         this.query();
+      },
+      //修改页面信息
+      update: function (pageId) {
+        this.$router.push({
+          path: '/cms/page/update/' + pageId/*, query: {
+            page: this.page,
+            siteId: this.params.siteId
+          }*/
+        });
       }
     },
     //在新增页面点击返回时,由于我需要在页面渲染完成之前得到参数,所以勇敢created
-    created(){
+    created() {
       this.page = Number.parseInt(this.$route.query.page || 1);
       this.params.siteId = this.$route.query.siteId || '';
       this.query();

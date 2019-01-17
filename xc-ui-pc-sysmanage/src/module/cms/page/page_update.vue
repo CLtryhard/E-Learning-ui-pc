@@ -1,7 +1,6 @@
-<!--编写页面静态部分,即view部分-->
 <template>
   <div>
-    <el-form :model="pageForm" label-width="80px" :rules="pageFormRules" ref="pageForm">
+    <el-form   :model="pageForm" label-width="80px" :rules="pageFormRules" ref="pageForm" >
       <el-form-item label="所属站点" prop="siteId">
         <el-select v-model="pageForm.siteId" placeholder="请选择站点">
           <el-option
@@ -23,16 +22,21 @@
         </el-select>
       </el-form-item>
       <el-form-item label="页面名称" prop="pageName">
-        <el-input v-model="pageForm.pageName" auto-complete="off"></el-input>
+        <el-input v-model="pageForm.pageName" auto-complete="off" ></el-input>
       </el-form-item>
+
       <el-form-item label="别名" prop="pageAliase">
-        <el-input v-model="pageForm.pageAliase" auto-complete="off"></el-input>
+        <el-input v-model="pageForm.pageAliase" auto-complete="off" ></el-input>
       </el-form-item>
       <el-form-item label="访问路径" prop="pageWebPath">
-        <el-input v-model="pageForm.pageWebPath" auto-complete="off"></el-input>
+        <el-input v-model="pageForm.pageWebPath" auto-complete="off" ></el-input>
       </el-form-item>
+
       <el-form-item label="物理路径" prop="pagePhysicalPath">
-        <el-input v-model="pageForm.pagePhysicalPath" auto-complete="off"></el-input>
+        <el-input v-model="pageForm.pagePhysicalPath" auto-complete="off" ></el-input>
+      </el-form-item>
+      <el-form-item label="数据Url" prop="dataUrl">
+        <el-input v-model="pageForm.dataUrl" auto-complete="off" ></el-input>
       </el-form-item>
       <el-form-item label="类型">
         <el-radio-group v-model="pageForm.pageType">
@@ -41,48 +45,44 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="创建时间">
-        <el-date-picker type="datetime" placeholder="创建时间" v-model="pageForm.pageCreateTime">
-        </el-date-picker>
+        <el-date-picker type="datetime" placeholder="创建时间" v-model="pageForm.pageCreateTime"></el-date-picker>
       </el-form-item>
+
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="addSubmit">提交</el-button>
-      <el-button type="primary" @click="go_back">返回</el-button>
+      <el-button @click="go_back">返回</el-button>
+      <el-button type="primary" @click.native="updateSubmit" :loading="addLoading">提交</el-button>
     </div>
-
   </div>
-
 </template>
-
-<!--编写页面静态部分,即model和vm部分-->
 <script>
-  //引入cms.js,并将所有的API起名为cmsApi
-  import * as cmsApi from '../api/cms';
-
-  export default {
-    data() {
+  import * as cmsApi from '../api/cms'
+  export default{
+    data(){
       return {
-        //站点列表
-        siteList: [],
+        //页面id
+        pageId:'',
         //模版列表
-        templateList: [],
+        templateList:[],
+        addLoading: false,//加载效果标记
         //新增界面数据
         pageForm: {
-          siteId: '',
-          templateId: '',
+          siteId:'',
+          templateId:'',
           pageName: '',
           pageAliase: '',
           pageWebPath: '',
-          pageParameter: '',
-          pagePhysicalPath: '',
-          pageType: '',
+          dataUrl:'',
+          pageParameter:'',
+          pagePhysicalPath:'',
+          pageType:'',
           pageCreateTime: new Date()
         },
         pageFormRules: {
-          siteId: [
+          siteId:[
             {required: true, message: '请选择站点', trigger: 'blur'}
           ],
-          templateId: [
+          templateId:[
             {required: true, message: '请选择模版', trigger: 'blur'}
           ],
           pageName: [
@@ -94,37 +94,59 @@
           pagePhysicalPath: [
             {required: true, message: '请输入物理路径', trigger: 'blur'}
           ]
-        }
+        },
+        siteList:[]
       }
     },
-    methods: {
-      addSubmit() {
-        this.$refs.pageForm.validate(valid => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              cmsApi.page_add(this.pageForm).then(response =>{
-             if (response.success){
-               this.$message.success("提交成功");
-               this.$refs['pageForm'].resetFields();
-             }else {
-               this.$message.error("提交失败");
-             }
-           });
-            });
-          }
+    methods:{
+      go_back(){
+        this.$router.push({
+          path: '/cms/page/list'/*, query: {
+            page: this.$route.query.page,
+            siteId:this.$route.query.siteId
+          }*/
         })
       },
-      go_back() {
-        this.$router.push({
-          path: '/cms/page/list', query: {
-            //取出路由上的参数
-            page: this.$route.query.page,
-            siteId: this.$route.query.siteId
+      updateSubmit(){
+        this.$refs.pageForm.validate((valid) => {//表单校验
+          if (valid) {//表单校验通过
+            this.$confirm('确认提交吗？', '提示', {}).then(() => {
+              this.addLoading = true;
+              //修改提交请求服务端的接口
+              cmsApi.page_update(this.pageId,this.pageForm).then((res) => {
+                  console.log(res);
+                if(res.success){
+                  this.addLoading = false;
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  });
+                  //返回
+                  this.go_back();
+
+                }else{
+                  this.addLoading = false;
+                  this.$message.error('提交失败');
+                }
+              });
+            });
           }
-        })
+        });
       }
+
     },
-    mounted() {
+    created: function () {
+      this.pageId=this.$route.params.pageId;
+      //根据主键查询页面信息
+      cmsApi.page_get(this.pageId).then((res) => {
+        console.log(res);
+        if(res){
+          this.pageForm = res;
+        }
+      });
+    },
+    mounted:function(){
+
       //初始化站点列表
       this.siteList = [
         {
@@ -149,10 +171,7 @@
       ]
     }
   }
-
 </script>
-
-<!--编写页面样式-->
-<style scoped>
+<style>
 
 </style>
