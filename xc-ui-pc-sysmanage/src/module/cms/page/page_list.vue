@@ -52,6 +52,7 @@
             size="small" type="text"
             @click="del(page.row.pageId)">删除
           </el-button>
+          <el-button @click="preview(page.row.pageId)" type="text" size="small">页面预览</el-button>
         </template>
       </el-table-column>
 
@@ -135,7 +136,11 @@
             }
           })
         })
-      }
+      },
+      //页面预览
+      preview(pageId) {
+        window.open("http://www.xuecheng.com/cms/preview/" + pageId)
+      },
     },
     //在新增页面点击返回时,由于我需要在页面渲染完成之前得到参数,所以勇敢created
     created() {
