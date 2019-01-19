@@ -34,6 +34,9 @@
       <el-form-item label="物理路径" prop="pagePhysicalPath">
         <el-input v-model="pageForm.pagePhysicalPath" auto-complete="off"></el-input>
       </el-form-item>
+      <el-form-item label="数据Url" prop="dataUrl">
+      <el-input v-model="pageForm.dataUrl" auto-complete="off" ></el-input>
+      </el-form-item>
       <el-form-item label="类型">
         <el-radio-group v-model="pageForm.pageType">
           <el-radio class="radio" label="0">静态</el-radio>
